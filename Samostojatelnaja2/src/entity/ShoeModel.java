@@ -5,11 +5,13 @@
  */
 package entity;
 
+import java.io.Serializable;
+
 /**
  *
  * @author pupil
  */
-public class ShoeModel {
+public class ShoeModel implements Serializable{
     private String modelName;
     private float price;
 
@@ -31,7 +33,7 @@ public class ShoeModel {
 
     @Override
     public String toString() {
-        return "Model Name=" + modelName + "\nPrice=" + price + '\n';
+        return "Model Name= " + modelName + "\nPrice= " + price + '\n';
     }
     
     

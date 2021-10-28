@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 import keeper.FileKeeper;
+import java.io.Serializable;
 
 public class App {
     Scanner scanner = new Scanner(System.in);
@@ -21,6 +22,8 @@ public class App {
     
     public App(){
        ShoeModels = fileKeeper.loadModels();
+       buyers = fileKeeper.loadBuyers();
+       cash = fileKeeper.LoadCash();
     }
 
 
@@ -36,6 +39,7 @@ public void run(){
             System.out.println("5: Купить");
             System.out.println("6: Доход магазина за всё время");
             System.out.println("7: Добавить денег покупателю");
+            System.out.println("8: Посмотреть сколько всего заработанно");
             
             int task = scanner.nextInt();
             scanner.nextLine();
@@ -43,6 +47,8 @@ public void run(){
                 case 0: 
                     repeat="q";
                     fileKeeper.saveModels(ShoeModels);
+                    fileKeeper.saveBuyers(buyers);
+                    fileKeeper.saveCash(cash);
                     System.out.println("Программа закончена");
                     break;
                 case 1:
@@ -62,7 +68,7 @@ public void run(){
                     buyers.add(addBuyer());
                     break;
                 case 4:
-                    System.out.println("Список читателей: ");
+                    System.out.println("Список покупателей: ");
                     for (int i = 0; i < buyers.size(); i++) {
                         if(buyers.get(i) != null){
                             System.out.println(buyers.get(i).toString());
@@ -79,6 +85,9 @@ public void run(){
                 case 7:
                     System.out.println("Добавление денег покупателю");
                     addMoney(buyers);
+                    break;
+                case 8:
+                    System.out.println("Всего заработанно: " + cash);
                     break;
             }
         }while("y".equals(repeat));
@@ -115,6 +124,7 @@ public void run(){
         System.out.print("Введите сколько денег добавить покупателю: ");
         float money = (scanner.nextFloat());
         scanner.nextLine();
+        int isphone = 0;
         for (int i = 0; i < buyers.size(); i++) {
                         if(buyers.get(i) != null){
                             if(buyerPhone.equals(buyers.get(i).getPhone())){
@@ -122,7 +132,10 @@ public void run(){
                                 System.out.println("Деньги добавленны!");
                             }
                             else{
-                                System.out.println("Пользователя с таким телефоном не существует!");
+                                isphone++;
+                                if (isphone == buyers.size()) {
+                                    System.out.println("Пользователя с таким телефоном не существует!");
+                                }
                             }
                         }
                     }
@@ -141,23 +154,37 @@ public void run(){
                     }
         System.out.println("Какую модель покупает покупатель? ");
         String buyerModel = scanner.nextLine();
+        int isphone = 0;
         for (int i = 0; i < buyers.size(); i++){
             if(buyers.get(i) != null){
                 if(buyerPhone.equals(buyers.get(i).getPhone())){
+                    int ismodel = 0;
                     for (int x = 0; x < models.size(); x++){
                         if(buyerModel.equals(models.get(x).getModelName())){
-                            buyers.get(i).setMoney(buyers.get(i).getMoney()-models.get(x).getPrice());
-                            cash = cash + models.get(x).getPrice();
+                            if(buyers.get(i).getMoney()>=models.get(x).getPrice()) {
+                                buyers.get(i).setMoney(buyers.get(i).getMoney() - models.get(x).getPrice());
+                                cash = cash + models.get(x).getPrice();
+                                System.out.println("Покупка совершена!");
+                            }
+                            else{
+                                System.out.println("У покупателя не хватает денег!");
+                            }
                         }
                         else{
+                            ismodel++;
+                        }
+                        if (ismodel == models.size()){
                             System.out.println("Такой модели не существует!");
                         }
                     }
+
                 }
                 else{
-                    System.out.println("Пользователя с таким телефоном не существует!");
+                    isphone++;
+                    if (isphone == buyers.size()) {
+                        System.out.println("Пользователя с таким телефоном не существует!");
+                    }
                 }
-                System.out.println("Покупка совершена!");
             }
         }
         

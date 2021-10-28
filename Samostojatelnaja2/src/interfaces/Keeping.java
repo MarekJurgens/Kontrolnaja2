@@ -19,7 +19,7 @@ public interface Keeping {
     public List<ShoeModel> loadModels();
     public void saveBuyers(List<Buyer> buyers);
     public List<Buyer> loadBuyers();
-    public void saveCash(int cash);
-    public int LoadCash();
+    public void saveCash(float cash);
+    public float LoadCash();
     
 }
